@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    LogCap: Capture system logs to files.
+    Copyright (C) 2012  Jason Tian
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Application -->
+    <string name="app_name">LogCap</string>
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="clear_all">Clear All</string>
+    <string name="notification_ticker">LogCap is running</string>
+    <string name="notification_content">I am capturing logs for you</string>
+    <string name="service_label">Log Capture Service</string>
+    <string name="service_description">Capture system logs to files. \nForce stopping me may leak Logcat processes!</string>
+
+    <!-- Preferences -->
+    <string name="switch_summary_on">LogCap is running, click to stop</string>
+    <string name="switch_summary_off">Click to start LogCap</string>
+    <string name="switch_title">Capture Logs</string>
+    <string name="switch_key">switch_key</string>
+    <string name="buffer_title">Choose Buffers</string>
+    <string name="buffer_summary">Current buffers:</string>
+    <string name="buffer_key">buffer_key</string>
+    <string name="format_title">Choose Format</string>
+    <string name="format_key">format_key</string>
+    <string name="format_summary">Current format:</string>
+    <string name="file_number">Current %d files:</string>
+    <string name="file_size">%.2f M</string>
+    <string name="file_info_key">file_info_key</string>
+    <string name="file_info_title">Log File Info</string>
+    <string name="buffer_info_key">buffer_info_key</string>
+    <string name="buffer_info_title">Buffer Status</string>
+    <string name="buffer_info_summary">Click to check out detail information about all Logcat buffers</string>
+
+    <string-array name="formats">
+        <item>brief</item>
+        <item>process</item>
+        <item>tag</item>
+        <item>thread</item>
+        <item>raw</item>
+        <item>time</item>
+        <item>threadtime</item>
+        <item>long</item>
+    </string-array>
+
+    <!-- Error messages -->
+    <string name="msg_start_failed">Fail to start log capturing</string>
+    <string name="msg_clear_buf_failed">Fail to clear log buffers</string>
+    <string name="msg_buf_info_failed">Fail to get buffer info</string>
+    <string name="msg_invalid_buffer_or_format">Invalid buffer or format selected</string>
+
+    <!-- Tips (TODO) -->
+    <string name="buffer_tip">Click an item to clear corresponding buffer</string>
+    <string name="file_tip">Click an item to delete corresponding file</string>
+
+</resources>

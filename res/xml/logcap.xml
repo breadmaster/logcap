@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    LogCap: Capture system logs to files.
+    Copyright (C) 2012  Jason Tian
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/app_name" >
+
+    <CheckBoxPreference
+        android:disableDependentsState="true"
+        android:key="@string/switch_key"
+        android:summaryOff="@string/switch_summary_off"
+        android:summaryOn="@string/switch_summary_on"
+        android:title="@string/switch_title" />
+
+    <org.jasontian.logcap.util.MultiSelectListPreference
+        android:dependency="@string/switch_key"
+        android:key="@string/buffer_key"
+        android:summary="@string/buffer_summary"
+        android:title="@string/buffer_title" />
+
+    <ListPreference
+        android:dependency="@string/switch_key"
+        android:dialogTitle="@string/format_title"
+        android:entries="@array/formats"
+        android:entryValues="@array/formats"
+        android:key="@string/format_key"
+        android:negativeButtonText="@string/cancel"
+        android:summary="@string/format_summary"
+        android:title="@string/format_title" />
+
+    <org.jasontian.logcap.util.BufferInfoPreference
+        android:key="@string/buffer_info_key"
+        android:summary="@string/buffer_info_summary"
+        android:title="@string/buffer_info_title" />
+
+    <org.jasontian.logcap.util.FileInfoPreference
+        android:key="@string/file_info_key"
+        android:title="@string/file_info_title" />
+
+</PreferenceScreen>
