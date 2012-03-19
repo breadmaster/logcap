@@ -37,8 +37,6 @@ import java.util.HashSet;
  */
 public class LogcapService extends Service {
 
-    private static final int NOTIFICATION_LOGCAP = 0;
-
     private HashSet<Process> mLogcatProcesses;
 
     @Override
@@ -59,7 +57,7 @@ public class LogcapService extends Service {
             n.setLatestEventInfo(this, getText(R.string.app_name),
                     getText(R.string.notification_content), pi
                     );
-            startForeground(NOTIFICATION_LOGCAP, n);
+            startForeground(R.drawable.star_notify, n);
             String[] buffers = intent.getStringArrayExtra(Util.EXTRA_BUFFER);
             String format = intent.getStringExtra(Util.EXTRA_FORMAT);
             try {

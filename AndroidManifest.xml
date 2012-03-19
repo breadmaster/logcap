@@ -44,8 +44,7 @@
         <service
             android:name=".LogcapService"
             android:description="@string/service_description"
-            android:label="@string/service_label"
-            android:process=":capturer" >
+            android:label="@string/service_label">
         </service>
     </application>
 
