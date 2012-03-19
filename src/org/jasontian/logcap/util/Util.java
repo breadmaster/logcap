@@ -43,7 +43,7 @@ public class Util {
     
     public static final String EXTRA_BUFFER = "buffer";
 
-    private static final String LOG_DIR = "/mnt/sdcard/log/";
+    private static final String LOG_DIR = "/sdcard/log/";
 
     public static Process capture(String buffer, String format) throws IOException {
         File dir = new File(LOG_DIR);

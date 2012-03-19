@@ -18,9 +18,6 @@
 
 package org.jasontian.logcap;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -41,8 +38,6 @@ import org.jasontian.logcap.util.Util;
  */
 public class MainActivity extends PreferenceActivity implements
         OnPreferenceChangeListener {
-
-    private static final int NOTIFICATION_LOGCAP = 0;
 
     private CheckBoxPreference mSwitch;
 
@@ -72,20 +67,9 @@ public class MainActivity extends PreferenceActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        if (mSwitch.isChecked()) {
-            cancelNotification();
-        }
         updateSelectedFormat(null);
         updateSelectedBuffers(null);
         updateLogFileInfo();
-    }
-
-    @Override
-    protected void onStop() {
-        if (mSwitch.isChecked()) {
-            sendNotification();
-        }
-        super.onStop();
     }
 
     private void updateSelectedFormat(String f) {
@@ -113,26 +97,6 @@ public class MainActivity extends PreferenceActivity implements
 
     private void updateLogFileInfo() {
         mLogInfo.setSummary(Util.getLogFileInfo(this));
-    }
-
-    private void sendNotification() {
-        NotificationManager nm = (NotificationManager) this
-                .getSystemService(NOTIFICATION_SERVICE);
-        Notification n = new Notification(R.drawable.star_notify,
-                getText(R.string.notification_ticker),
-                System.currentTimeMillis());
-        PendingIntent pi = PendingIntent.getActivity(this, 0,
-                new Intent().setClass(this, MainActivity.class), 0);
-        n.setLatestEventInfo(this, getText(R.string.app_name),
-                getText(R.string.notification_content), pi
-                );
-        nm.notify(NOTIFICATION_LOGCAP, n);
-    }
-
-    private void cancelNotification() {
-        NotificationManager nm = (NotificationManager) this
-                .getSystemService(NOTIFICATION_SERVICE);
-        nm.cancel(NOTIFICATION_LOGCAP);
     }
 
     private boolean isInvalidLogSetting(String[] bufs, String format) {

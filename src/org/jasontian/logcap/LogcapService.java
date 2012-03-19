@@ -18,6 +18,8 @@
 
 package org.jasontian.logcap;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -35,6 +37,8 @@ import java.util.HashSet;
  */
 public class LogcapService extends Service {
 
+    private static final int NOTIFICATION_LOGCAP = 0;
+
     private HashSet<Process> mLogcatProcesses;
 
     @Override
@@ -47,6 +51,15 @@ public class LogcapService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         boolean start = intent.getBooleanExtra(Util.EXTRA_START, false);
         if (start) {
+            Notification n = new Notification(R.drawable.star_notify,
+                    getText(R.string.notification_ticker),
+                    System.currentTimeMillis());
+            PendingIntent pi = PendingIntent.getActivity(this, 0,
+                    new Intent().setClass(this, MainActivity.class), 0);
+            n.setLatestEventInfo(this, getText(R.string.app_name),
+                    getText(R.string.notification_content), pi
+                    );
+            startForeground(NOTIFICATION_LOGCAP, n);
             String[] buffers = intent.getStringArrayExtra(Util.EXTRA_BUFFER);
             String format = intent.getStringExtra(Util.EXTRA_FORMAT);
             try {
@@ -72,6 +85,7 @@ public class LogcapService extends Service {
                 }
                 mLogcatProcesses.clear();
             }
+            stopForeground(true);
             stopSelf();
         }
         return START_NOT_STICKY;
