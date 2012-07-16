@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    LogCap: Capture system logs to files.
+    Copyright (C) 2012  Jason Tian
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Application -->
+    <string name="app_name">LogCap</string>
+    <string name="cancel">取消</string>
+    <string name="close">关闭</string>
+    <string name="clear_all">清除所有</string>
+    <string name="notification_ticker">LogCap正在运行</string>
+    <string name="notification_content">正在为您抓取日志</string>
+    <string name="service_label">Log Capture Service</string>
+    <string name="service_description">Capture system logs to files. \nForce stopping me may leak Logcat processes!</string>
+
+    <!-- Preferences -->
+    <string name="switch_summary_on">LogCap正在运行，点击停止</string>
+    <string name="switch_summary_off">点击开始</string>
+    <string name="switch_title">抓取日志</string>
+    <string name="switch_key">switch_key</string>
+    <string name="buffer_title">选择缓存</string>
+    <string name="buffer_summary">当前缓存:</string>
+    <string name="buffer_key">buffer_key</string>
+    <string name="format_title">选择时间格式</string>
+    <string name="format_key">format_key</string>
+    <string name="format_summary">当前格式:</string>
+    <string name="file_number">当前 %d 个文件:</string>
+    <string name="file_size">%.2f M</string>
+    <string name="file_info_key">file_info_key</string>
+    <string name="file_info_title">日志文件信息</string>
+    <string name="buffer_info_key">buffer_info_key</string>
+    <string name="buffer_info_title">缓存状态</string>
+    <string name="buffer_info_summary">点击查看日志缓存信息</string>
+
+    <string-array name="formats">
+        <item>brief</item>
+        <item>process</item>
+        <item>tag</item>
+        <item>thread</item>
+        <item>raw</item>
+        <item>time</item>
+        <item>threadtime</item>
+        <item>long</item>
+    </string-array>
+
+    <!-- Error messages -->
+    <string name="msg_start_failed">日志抓取失败</string>
+    <string name="msg_clear_buf_failed">清除缓存失败</string>
+    <string name="msg_buf_info_failed">获取缓存信息失败</string>
+    <string name="msg_invalid_buffer_or_format">无效的缓存或格式</string>
+
+    <!-- Tips (TODO) -->
+    <string name="buffer_tip">Click an item to clear corresponding buffer</string>
+    <string name="file_tip">Click an item to delete corresponding file</string>
+
+</resources>

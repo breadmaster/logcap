@@ -27,6 +27,10 @@ import org.jasontian.logcap.util.Util;
  * @author Jason Tian
  */
 public class App extends Application {
+    
+    public static final String LOG_TAG = "LogCapture";
+    
+    public static Object mLock = new Object();
 
     @Override
     public void onCreate() {
