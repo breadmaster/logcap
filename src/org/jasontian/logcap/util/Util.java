@@ -23,19 +23,21 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
+import org.jasontian.logcap.App;
 import org.jasontian.logcap.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 
 /**
  * @author Jason Tian
  */
 public class Util {
 
-    public static final String TAG = "LOGCAP";
+    public static final String TAG = App.LOG_TAG;
     
     public static final String EXTRA_START = "start";
     
@@ -52,11 +54,13 @@ public class Util {
                 throw new IOException("Can not mkdir: " + dir);
             }
         }
+        Date date = new Date();
+        String time = "-" + (date.getMonth() + 1) + date.getDate() + date.getHours() + date.getMinutes() + date.getSeconds();
         return new ProcessBuilder(
                 new String[] {
                         "/system/bin/logcat",
                         "-v", format, "-b", buffer, "-f",
-                        new File(dir, buffer + ".txt").getAbsolutePath()
+                        new File(dir, buffer + time + ".txt").getAbsolutePath()
                 }).start();
     }
 
