@@ -20,15 +20,18 @@ package org.jasontian.logcap;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
-import org.jasontian.logcap.R;
 import org.jasontian.logcap.util.FileInfoPreference;
 import org.jasontian.logcap.util.MultiSelectListPreference;
 import org.jasontian.logcap.util.Util;
@@ -37,7 +40,7 @@ import org.jasontian.logcap.util.Util;
  * @author Jason Tian
  */
 public class MainActivity extends PreferenceActivity implements
-        OnPreferenceChangeListener {
+        OnPreferenceChangeListener { 
 
     private CheckBoxPreference mSwitch;
 
@@ -46,6 +49,20 @@ public class MainActivity extends PreferenceActivity implements
     private ListPreference mChooseFormat;
 
     private FileInfoPreference mLogInfo;
+    
+    private static final int UPDATE_LOGFILE_INFO = 0;
+       
+    public Handler myHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            updateLogFileInfo();
+            if (mSwitch.isChecked()) {                
+                sendMessageDelayed(obtainMessage(UPDATE_LOGFILE_INFO), 10000);
+            }            
+        }
+        
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +79,14 @@ public class MainActivity extends PreferenceActivity implements
         mChooseFormat = (ListPreference) findPreference(getText(R.string.format_key));
         mChooseFormat.setOnPreferenceChangeListener(this);
         mLogInfo = (FileInfoPreference) findPreference(getText(R.string.file_info_key));
+        mLogInfo.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+            
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Log.d(App.LOG_TAG, "mLogInfo clicked " + preference.toString());
+                return false;
+            }
+        });
     }
 
     @Override
@@ -70,6 +95,12 @@ public class MainActivity extends PreferenceActivity implements
         updateSelectedFormat(null);
         updateSelectedBuffers(null);
         updateLogFileInfo();
+        if (mSwitch.isChecked() && BootCompleteReceiver.mBootCompleted) {
+            Log.d(App.LOG_TAG, "auto start logcat service on boot");
+            startLogService(true);
+            moveTaskToBack(true);
+        }
+        
     }
 
     private void updateSelectedFormat(String f) {
@@ -95,7 +126,7 @@ public class MainActivity extends PreferenceActivity implements
         mChooseBuffers.setSummary(summary);
     }
 
-    private void updateLogFileInfo() {
+    public void updateLogFileInfo() {
         mLogInfo.setSummary(Util.getLogFileInfo(this));
     }
 
@@ -112,24 +143,7 @@ public class MainActivity extends PreferenceActivity implements
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (preference == mSwitch) {
-            Intent service = new Intent()
-                    .setClass(getApplicationContext(), LogcapService.class);
-            if ((Boolean) newValue) {
-                String[] bufs = MultiSelectListPreference.parseStoredValue(mChooseBuffers
-                        .getValue());
-                String format = mChooseFormat.getValue();
-                if (isInvalidLogSetting(bufs, format)) {
-                    Toast.makeText(getApplicationContext(), R.string.msg_invalid_buffer_or_format,
-                            Toast.LENGTH_LONG).show();
-                    return false;
-                }
-                service.putExtra(Util.EXTRA_START, true);
-                service.putExtra(Util.EXTRA_BUFFER, bufs);
-                service.putExtra(Util.EXTRA_FORMAT, format);
-            }
-            startService(service);
-            // FIXME not working
-            updateLogFileInfo();
+            startLogService((Boolean)newValue); 
             return true;
         } else if (preference == mChooseFormat) {
             updateSelectedFormat(newValue.toString());
@@ -139,5 +153,27 @@ public class MainActivity extends PreferenceActivity implements
             return true;
         }
         return false;
+    }
+
+    private void startLogService(boolean newValue) {
+        Intent service = new Intent()
+                .setClass(getApplicationContext(), LogcapService.class);
+        if (newValue) {
+            String[] bufs = MultiSelectListPreference.parseStoredValue(mChooseBuffers
+                    .getValue());
+            String format = mChooseFormat.getValue();
+            if (isInvalidLogSetting(bufs, format)) {
+                Toast.makeText(getApplicationContext(), R.string.msg_invalid_buffer_or_format,
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
+            service.putExtra(Util.EXTRA_START, true);
+            service.putExtra(Util.EXTRA_BUFFER, bufs);
+            service.putExtra(Util.EXTRA_FORMAT, format);
+        }
+        startService(service);
+        myHandler.sendEmptyMessageDelayed(UPDATE_LOGFILE_INFO, 100);
+        //updateLogFileInfo();
+        Log.d(App.LOG_TAG, "start LogcapService: " + newValue);        
     }
 }

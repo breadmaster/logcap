@@ -38,6 +38,8 @@ import java.util.HashSet;
 public class LogcapService extends Service {
 
     private HashSet<Process> mLogcatProcesses;
+    
+    public static final String PROPERTY_NAME = "debug.logcap.start";
 
     @Override
     public void onCreate() {
@@ -49,6 +51,7 @@ public class LogcapService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         boolean start = intent.getBooleanExtra(Util.EXTRA_START, false);
         if (start) {
+            System.setProperty(PROPERTY_NAME, "true");
             Notification n = new Notification(R.drawable.star_notify,
                     getText(R.string.notification_ticker),
                     System.currentTimeMillis());
@@ -62,9 +65,11 @@ public class LogcapService extends Service {
             String format = intent.getStringExtra(Util.EXTRA_FORMAT);
             try {
                 synchronized (mLogcatProcesses) {
+                    clearLogcapProc();
                     for (String buf : buffers) {
                         mLogcatProcesses.add(Util.capture(buf, format));
                     }
+                    Log.d(App.LOG_TAG, "log cap proc started");
                 }
             } catch (IOException e) {
                 Toast.makeText(getApplicationContext(), R.string.msg_start_failed,
@@ -73,20 +78,25 @@ public class LogcapService extends Service {
                 stopSelf();
             }
         } else {
+            System.setProperty(PROPERTY_NAME, "false");
             synchronized (mLogcatProcesses) {
-                for (Process proc : mLogcatProcesses) {
-                    if (proc != null) {
-                        proc.destroy();
-                    } else {
-                        Log.w(Util.TAG, "process to be destroied is null");
-                    }
-                }
-                mLogcatProcesses.clear();
+                clearLogcapProc();               
             }
             stopForeground(true);
             stopSelf();
         }
         return START_NOT_STICKY;
+    }
+
+    private void clearLogcapProc() {
+        for (Process proc : mLogcatProcesses) {
+            if (proc != null) {
+                proc.destroy();
+                Log.d(Util.TAG, "proc destroyed");
+            }
+        }
+        mLogcatProcesses.clear();
+        
     }
 
     @Override
