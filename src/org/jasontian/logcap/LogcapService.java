@@ -91,10 +91,10 @@ public class LogcapService extends Service {
     private void clearLogcapProc() {
         for (Process proc : mLogcatProcesses) {
             if (proc != null) {
-                proc.destroy();
-                Log.d(Util.TAG, "proc destroyed");
-            }
+                proc.destroy();               
+            }            
         }
+        Log.d(Util.TAG, "proc destroyed");
         mLogcatProcesses.clear();
         
     }
