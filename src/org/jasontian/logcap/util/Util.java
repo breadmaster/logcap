@@ -98,7 +98,7 @@ public class Util {
         }).start().getInputStream());
     }
 
-    public static void clearLogFile(File log) {
+    public static void removeLogFile(File log) {
         if (log != null && log.isFile()) {
             log.delete();
         }

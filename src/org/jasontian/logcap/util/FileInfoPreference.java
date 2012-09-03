@@ -53,12 +53,12 @@ public class FileInfoPreference extends DialogPreference {
                 File[] logs = mAdapter.logfiles;
                 if (logs != null) {
                     for (File log : logs) {
-                        Util.clearLogFile(log);
+                        Util.removeLogFile(log);
                     }
                 }
                 break;
             default:
-                Util.clearLogFile((File) mAdapter.getItem(which));
+                Util.removeLogFile((File) mAdapter.getItem(which));
         }
         setSummary(Util.getLogFileInfo(getContext()));
     }
