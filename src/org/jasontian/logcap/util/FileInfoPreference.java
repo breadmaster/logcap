@@ -21,6 +21,7 @@ package org.jasontian.logcap.util;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -28,8 +29,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import org.jasontian.logcap.MainActivity;
 
+import org.jasontian.logcap.MainActivity;
 import org.jasontian.logcap.R;
 
 import java.io.File;
@@ -40,11 +41,14 @@ import java.io.File;
 public class FileInfoPreference extends DialogPreference {
 
     private FileInfoAdapter mAdapter;
+    
+    
+    private MainActivity mParent;
 
     public FileInfoPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-
+    
     @Override
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
@@ -56,6 +60,7 @@ public class FileInfoPreference extends DialogPreference {
                     for (File log : logs) {
                         Util.clearLogFile(log);
                     }
+                    mParent.onLogCleared(-1);
                 }
                 break;
             default:
@@ -111,5 +116,24 @@ public class FileInfoPreference extends DialogPreference {
             }
             return convertView;
         }
+    }
+
+    public void clearLogFile() {
+        File[] logs = mAdapter.logfiles;
+        if (logs != null) {
+            for (File log : logs) {
+                Util.clearLogFile(log);
+            }
+        }
+        
+    }
+
+    public void clearLogFileByIndex(int index) {
+        Util.clearLogFile((File) mAdapter.getItem(index));
+        
+    }
+
+    public void setParent(MainActivity mainActivity) {
+        mParent = mainActivity;     
     }
 }

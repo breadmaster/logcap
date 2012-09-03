@@ -26,7 +26,6 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -38,6 +37,7 @@ import org.jasontian.logcap.util.Util;
 
 /**
  * @author Jason Tian
+ * @author (second) zengjinlong
  */
 public class MainActivity extends PreferenceActivity implements
         OnPreferenceChangeListener { 
@@ -79,14 +79,8 @@ public class MainActivity extends PreferenceActivity implements
         mChooseFormat = (ListPreference) findPreference(getText(R.string.format_key));
         mChooseFormat.setOnPreferenceChangeListener(this);
         mLogInfo = (FileInfoPreference) findPreference(getText(R.string.file_info_key));
-        mLogInfo.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Log.d(App.LOG_TAG, "mLogInfo clicked " + preference.toString());
-                return false;
-            }
-        });
+        mLogInfo.setParent(this);
+
     }
 
     @Override
@@ -95,12 +89,17 @@ public class MainActivity extends PreferenceActivity implements
         updateSelectedFormat(null);
         updateSelectedBuffers(null);
         updateLogFileInfo();
-        if (mSwitch.isChecked() && BootCompleteReceiver.mBootCompleted) {
-            Log.d(App.LOG_TAG, "auto start logcat service on boot");
-            startLogService(true);
-            moveTaskToBack(true);
-        }
         
+        if (BootCompleteReceiver.mBootCompleted) {
+            BootCompleteReceiver.mBootCompleted = false;
+            if (mSwitch.isChecked()) {
+                Log.d(App.LOG_TAG, "auto start logcat service on boot");               
+                startLogService(true);
+                moveTaskToBack(true); 
+            } else {
+                finish();
+            }           
+        }      
     }
 
     private void updateSelectedFormat(String f) {
@@ -155,7 +154,7 @@ public class MainActivity extends PreferenceActivity implements
         return false;
     }
 
-    private void startLogService(boolean newValue) {
+    public void startLogService(boolean newValue) {
         Intent service = new Intent()
                 .setClass(getApplicationContext(), LogcapService.class);
         if (newValue) {
@@ -172,8 +171,15 @@ public class MainActivity extends PreferenceActivity implements
             service.putExtra(Util.EXTRA_FORMAT, format);
         }
         startService(service);
-        myHandler.sendEmptyMessageDelayed(UPDATE_LOGFILE_INFO, 100);
+        myHandler.sendEmptyMessageDelayed(UPDATE_LOGFILE_INFO, 200);
         //updateLogFileInfo();
         Log.d(App.LOG_TAG, "start LogcapService: " + newValue);        
+    }
+
+
+    public void onLogCleared(int index) {
+        if (mSwitch.isChecked()) {
+            startLogService(true);//清除之后重新开始抓日志
+        }         
     }
 }
