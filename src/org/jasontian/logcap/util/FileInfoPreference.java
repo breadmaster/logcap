@@ -46,6 +46,9 @@ public class FileInfoPreference extends DialogPreference {
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
+        if (mAdapter.logfiles == null) {
+            return;
+        }
         switch (which) {
             case -2:
                 break;
@@ -65,7 +68,7 @@ public class FileInfoPreference extends DialogPreference {
 
     @Override
     protected void onPrepareDialogBuilder(Builder builder) {
-        builder.setTitle(R.string.file_info_title);
+        builder.setTitle(R.string.file_tip);
         builder.setPositiveButton(R.string.clear_all, this);
         builder.setNegativeButton(R.string.close, this);
         builder.setAdapter(mAdapter = new FileInfoAdapter(), this);
@@ -73,7 +76,21 @@ public class FileInfoPreference extends DialogPreference {
 
     private class FileInfoAdapter extends BaseAdapter {
 
+        private static final int FILE_INFO = 0;
+
+        private static final int EMPTY_VIEW = 1;
+
         private File[] logfiles;
+
+        @Override
+        public int getItemViewType(int position) {
+            return logfiles == null ? EMPTY_VIEW : FILE_INFO;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 2;
+        }
 
         public FileInfoAdapter() {
             logfiles = Util.getLogFiles();
@@ -81,7 +98,7 @@ public class FileInfoPreference extends DialogPreference {
 
         @Override
         public int getCount() {
-            return logfiles == null ? 0 : logfiles.length;
+            return logfiles == null ? 1 : logfiles.length;
         }
 
         @Override
@@ -107,6 +124,12 @@ public class FileInfoPreference extends DialogPreference {
                     ((TextView) convertView).setText("File name: " + log.getAbsolutePath()
                             + "\nFile size: " + log.length() + " bytes");
                 }
+            } else {
+                convertView = ((LayoutInflater) getContext().getSystemService(
+                        Context.LAYOUT_INFLATER_SERVICE))
+                        .inflate(R.layout.general_text, null);
+                ((TextView) convertView).setText(R.string.msg_file_info_failed);
+
             }
             return convertView;
         }

@@ -53,7 +53,7 @@ public class BufferInfoPreference extends ListPreference {
 
     @Override
     protected void onPrepareDialogBuilder(Builder builder) {
-        builder.setTitle(R.string.buffer_info_title);
+        builder.setTitle(R.string.buffer_tip);
         builder.setPositiveButton(R.string.clear_all, this);
         builder.setNegativeButton(R.string.close, null);
         builder.setAdapter(new BufferInfoAdapter(), this);
@@ -61,6 +61,9 @@ public class BufferInfoPreference extends ListPreference {
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
+        if (BUFFERS == null) {
+            return;
+        }
         if (which < 0) {
             try {
                 for (String buf : BUFFERS) {
@@ -85,9 +88,23 @@ public class BufferInfoPreference extends ListPreference {
 
     private class BufferInfoAdapter extends BaseAdapter {
 
+        private static final int BUFFER_INFO = 0;
+
+        private static final int EMPTY_VIEW = 1;
+
+        @Override
+        public int getItemViewType(int position) {
+            return BUFFERS == null ? EMPTY_VIEW : BUFFER_INFO;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 2;
+        }
+
         @Override
         public int getCount() {
-            return BUFFERS.length;
+            return BUFFERS == null ? 1 : BUFFERS.length;
         }
 
         @Override
@@ -102,6 +119,13 @@ public class BufferInfoPreference extends ListPreference {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            if (getItemViewType(position) == EMPTY_VIEW) {
+                convertView = ((LayoutInflater) getContext().getSystemService(
+                        Context.LAYOUT_INFLATER_SERVICE))
+                        .inflate(R.layout.general_text, null);
+                ((TextView) convertView).setText(R.string.msg_buf_info_failed);
+                return convertView;
+            }
             if (convertView == null) {
                 convertView = ((LayoutInflater) getContext().getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE))

@@ -78,7 +78,7 @@ public class Util {
                 bufs = out.split("\\s+");
             }
         } catch (IOException e) {
-            throw new IllegalStateException("No available log buffer");
+            Log.d(TAG, "No available log buffer", e);
         }
         return bufs;
     }

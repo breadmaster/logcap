@@ -59,13 +59,14 @@
     </string-array>
 
     <!-- Error messages -->
-    <string name="msg_start_failed">Fail to start log capturing</string>
-    <string name="msg_clear_buf_failed">Fail to clear log buffers</string>
-    <string name="msg_buf_info_failed">Fail to get buffer info</string>
+    <string name="msg_start_failed">Failed to start log capturing</string>
+    <string name="msg_clear_buf_failed">Failed to clear log buffers</string>
+    <string name="msg_buf_info_failed">Failed to read buffer info</string>
+    <string name="msg_file_info_failed">Failed to read log file info</string>
     <string name="msg_invalid_buffer_or_format">Invalid buffer or format selected</string>
 
-    <!-- Tips (TODO) -->
-    <string name="buffer_tip">Click an item to clear corresponding buffer</string>
-    <string name="file_tip">Click an item to delete corresponding file</string>
+    <!-- Tips -->
+    <string name="buffer_tip">Select to clear buffer</string>
+    <string name="file_tip">Select to delete file</string>
 
 </resources>
