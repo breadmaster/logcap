@@ -84,7 +84,7 @@ public class FileInfoPreference extends DialogPreference {
 
         @Override
         public int getItemViewType(int position) {
-            return logfiles == null ? EMPTY_VIEW : FILE_INFO;
+            return (logfiles == null || logfiles.length == 0) ? EMPTY_VIEW : FILE_INFO;
         }
 
         @Override
@@ -98,12 +98,12 @@ public class FileInfoPreference extends DialogPreference {
 
         @Override
         public int getCount() {
-            return logfiles == null ? 1 : logfiles.length;
+            return (logfiles == null || logfiles.length == 0) ? 1 : logfiles.length;
         }
 
         @Override
         public Object getItem(int position) {
-            return logfiles == null ? null : logfiles[position];
+            return (logfiles == null || logfiles.length == 0) ? null : logfiles[position];
         }
 
         @Override
@@ -113,23 +113,22 @@ public class FileInfoPreference extends DialogPreference {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            if (getItemViewType(position) == EMPTY_VIEW) {
+                convertView = ((LayoutInflater) getContext().getSystemService(
+                        Context.LAYOUT_INFLATER_SERVICE))
+                        .inflate(R.layout.general_text, null);
+                ((TextView) convertView).setText(R.string.msg_file_info_failed);
+                return convertView;
+            }
             if (convertView == null) {
                 convertView = ((LayoutInflater) getContext().getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE))
                         .inflate(R.layout.general_text, null);
             }
-            if (logfiles != null) {
-                File log = logfiles[position];
-                if (log.isFile()) {
-                    ((TextView) convertView).setText("File name: " + log.getAbsolutePath()
-                            + "\nFile size: " + log.length() + " bytes");
-                }
-            } else {
-                convertView = ((LayoutInflater) getContext().getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE))
-                        .inflate(R.layout.general_text, null);
-                ((TextView) convertView).setText(R.string.msg_file_info_failed);
-
+            File log = logfiles[position];
+            if (log.isFile()) {
+                ((TextView) convertView).setText("File name: " + log.getAbsolutePath()
+                        + "\nFile size: " + log.length() + " bytes");
             }
             return convertView;
         }

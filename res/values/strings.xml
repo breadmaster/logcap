@@ -62,7 +62,7 @@
     <string name="msg_start_failed">Failed to start log capturing</string>
     <string name="msg_clear_buf_failed">Failed to clear log buffers</string>
     <string name="msg_buf_info_failed">Failed to read buffer info</string>
-    <string name="msg_file_info_failed">Failed to read log file info</string>
+    <string name="msg_file_info_failed">No log file found</string>
     <string name="msg_invalid_buffer_or_format">Invalid buffer or format selected</string>
 
     <!-- Tips -->
