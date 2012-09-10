@@ -45,7 +45,7 @@
     <string name="file_info_title">Log File Info</string>
     <string name="buffer_info_key">buffer_info_key</string>
     <string name="buffer_info_title">Buffer Status</string>
-    <string name="buffer_info_summary">Click to check out detail information about all Logcat buffers</string>
+    <string name="buffer_info_summary">Click to see detailed information about all Logcat buffers</string>
 
     <string-array name="formats">
         <item>brief</item>
